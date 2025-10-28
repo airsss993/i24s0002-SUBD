@@ -1,0 +1,23 @@
+CREATE TABLE students (
+  id        INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name      VARCHAR(30) NOT NULL,
+  lastname  VARCHAR(30) NOT NULL,
+  birthday  DATETIME    DEFAULT NULL
+) 
+
+CREATE TABLE subjects (
+  id     INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name   VARCHAR(30) NOT NULL,
+  hours  SMALLINT    DEFAULT NULL
+)
+
+CREATE TABLE marks (
+  stud_id INT       NOT NULL,
+  subj_id INT       NOT NULL,
+  ddate   DATETIME  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  mark    TINYINT   NOT NULL,
+  PRIMARY KEY (stud_id, subj_id, ddate),
+  FOREIGN KEY (stud_id) REFERENCES students(id),
+  FOREIGN KEY (subj_id) REFERENCES subjects(id),
+  CHECK (mark >= 1 AND mark <= 5)
+)
