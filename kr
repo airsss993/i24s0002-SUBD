@@ -24,6 +24,16 @@ FROM numbers;
 
 CREATE INDEX event1_loc_date_index ON subd.events1(location, date);
 
----
+--- With INDEX
 
 EXPLAIN ANALYZE SELECT * FROM subd.events1 WHERE location = 'Location_79' ORDER BY date;
+
+-> Index lookup on events1 using event1_loc_date_index (location = 'Location_79')  (cost=214 rows=612) (actual time=0.663..3.98 rows=612 loops=1)
+
+
+--- Without INDEX
+
+-> Sort: subd.events1.`date`  (cost=6069 rows=60127) (actual time=43.1..43.2 rows=612 loops=1)
+    -> Filter: (subd.events1.location = 'Location_79')  (cost=6069 rows=60127) (actual time=0.347..42.8 rows=612 loops=1)
+        -> Table scan on events1  (cost=6069 rows=60127) (actual time=0.336..28.5 rows=60000 loops=1)
+
