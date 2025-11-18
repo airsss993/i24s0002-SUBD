@@ -21,3 +21,5 @@ CREATE TABLE marks (
   FOREIGN KEY (subj_id) REFERENCES subjects(id),
   CHECK (mark >= 1 AND mark <= 5)
 )
+
+1
