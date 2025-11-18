@@ -1,0 +1,29 @@
+CREATE TABLE subd.events1 (
+    event_id INT PRIMARY KEY,
+    event_name VARCHAR(50),
+    location VARCHAR(50),
+    date DATE
+);
+
+SET SESSION cte_max_recursion_depth = 60000;
+
+INSERT INTO subd.events1 (event_id, event_name, location, date)
+WITH RECURSIVE numbers (n) AS (
+    SELECT 1
+    UNION ALL
+    SELECT n + 1 FROM numbers WHERE n < 60000
+)
+SELECT 
+    n,
+    CONCAT('Event_', n),
+    CONCAT('Location_', FLOOR(RAND() * 100)),
+    DATE_ADD('2020-01-01', INTERVAL FLOOR(RAND() * 111) DAY)
+FROM numbers;
+
+---
+
+CREATE INDEX event1_loc_date_index ON subd.events1(location, date);
+
+---
+
+EXPLAIN ANALYZE SELECT * FROM subd.events1 WHERE location = 'Location_79' ORDER BY date;
